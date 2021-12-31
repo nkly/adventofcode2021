@@ -63,10 +63,10 @@ data P
 
 main :: IO ()
 main =
-  getContents >>= print . fmap (eval . fst . readPacket) . parse
+  getContents >>= print . eval . fst . readPacket . parse
   where
     parse =
-      fmap (concatMap htob) . lines
+      concatMap htob
     eval (PLit _ v) =
       v
     eval (POp _ t ps)

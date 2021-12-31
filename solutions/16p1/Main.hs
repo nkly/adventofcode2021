@@ -182,10 +182,10 @@ data P
 
 main :: IO ()
 main =
-  getContents >>= print . sum . fmap (sumVersions . fst . readPacket) . parse
+  getContents >>= print . sumVersions . fst . readPacket . parse
   where
     parse =
-      fmap (concatMap htob) . lines
+      concatMap htob
     sumVersions (PLit v _) =
       v
     sumVersions (POp v _ ps) =
