@@ -1,0 +1,281 @@
+cabal-version:      3.4
+name:               adventofcode2021
+version:            1.0.0.0
+author:             Nikolai Obedin
+
+
+common base
+    default-language: Haskell2010
+    build-depends:
+        , async ^>=2.2.4
+        , base ^>=4.14.3.0
+        , containers ^>=0.6.5.0
+        , hashable ^>=1.4.0.0
+        , parallel ^>=3.2.2.0
+        , vector ^>=0.12.3.0
+        , vector-algorithms ^>=0.8.0.4
+        , unordered-containers ^>=0.2.16.0
+    default-extensions:
+        , LambdaCase
+        , BangPatterns
+        , TupleSections
+    ghc-options:
+        -O2 -Wall -Wno-type-defaults
+
+common solution
+    import: base
+    build-depends:
+        , adventofcode2021
+    ghc-options:
+        -O2 -rtsopts "-with-rtsopts=-A8m -M20G -N" -threaded
+
+library
+    import: base
+    hs-source-dirs: lib
+    exposed-modules:
+        Data.Matrix
+
+executable solution01p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/01p1
+
+executable solution01p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/01p2
+
+executable solution02p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/02p1
+
+executable solution02p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/02p2
+
+executable solution03p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/03p1
+
+executable solution03p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/03p2
+
+executable solution04p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/04p1
+
+executable solution04p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/04p2
+
+executable solution05p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/05p1
+
+executable solution05p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/05p2
+
+executable solution06p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/06p1
+
+executable solution06p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/06p2
+
+executable solution07p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/07p1
+
+executable solution07p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/07p2
+
+executable solution08p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/08p1
+
+executable solution08p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/08p2
+
+executable solution09p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/09p1
+
+executable solution09p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/09p2
+
+executable solution10p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/10p1
+
+executable solution10p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/10p2
+
+executable solution11p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/11p1
+
+executable solution11p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/11p2
+
+executable solution12p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/12p1
+
+executable solution12p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/12p2
+
+executable solution13p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/13p1
+
+executable solution13p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/13p2
+
+executable solution14p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/14p1
+
+executable solution14p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/14p2
+
+executable solution15p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/15p1
+
+executable solution15p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/15p2
+
+executable solution16p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/16p1
+
+executable solution16p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/16p2
+
+executable solution17p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/17p1
+
+executable solution17p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/17p2
+
+executable solution18p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/18p1
+
+executable solution18p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/18p2
+
+executable solution19p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/19p1
+
+executable solution19p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/19p2
+
+executable solution20p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/20p1
+
+executable solution20p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/20p2
+
+executable solution21p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/21p1
+
+executable solution21p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/21p2
+
+executable solution22p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/22p1
+
+executable solution22p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/22p2
+
+executable solution23p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/23p1
+
+executable solution23p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/23p2
+
+executable solution24p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/24p1
+
+executable solution24p2
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/24p2
+
+executable solution25p1
+    import: solution
+    main-is: Main.hs
+    hs-source-dirs: solutions/25p1
