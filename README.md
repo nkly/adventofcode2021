@@ -70,6 +70,6 @@ All solutions were executed on Dell XPS 13 7390 with Intel i7-10510U and 16GB RA
 | `22p2`   | `0m0.329s`  |
 | `23p1`   | `0m6.768s`  |
 | `23p2`   | `0m25.489s` |
-| `24p1`   | `4m47.167s` |
-| `24p2`   | `4m40.472s` |
+| `24p1`   | `1m58.479s` |
+| `24p2`   | `1m55.579s` |
 | `25p1`   | `0m17.899s` |

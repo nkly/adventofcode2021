@@ -103,17 +103,19 @@ To enable as many submarine features as possible, find the largest valid
 fourteen-digit model number that contains no 0 digits. What is the largest
 model number accepted by MONAD?
 -}
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Main where
 
 import Control.Concurrent.Async
 import Data.Foldable
 import Data.List hiding (sort)
-import Data.List.NonEmpty hiding (sort)
 import Data.Maybe
-import Data.Semigroup
+import qualified Data.Set as S
 import Data.Vector.Algorithms.Merge (sort)
 import qualified Data.Vector.Unboxed as V
 import qualified Data.Vector.Unboxed.Mutable as MV
+import GHC.Conc (numCapabilities)
 
 data A
   = AVal !Int
@@ -140,14 +142,22 @@ main =
     solve' !states [] =
       V.maximum . V.map snd . V.filter ((== 0) . (\(_, _, _, z) -> z) . fst) <$> V.freeze states
     solve' !states (ins@(IInp _) : insn) = do
-      sort states
+      if MV.length states < 1000000 then sort states else psort states
       lastIdx <- MV.foldM' merge 0 $ MV.tail states
       let newSize = (lastIdx + 1) * 9
       putStrLn $ "N. states: " <> show newSize
       states' <- MV.unsafeNew newSize
-      MV.imapM_ (\i (s, x) -> forM_ [1 .. 9] (\j -> MV.write states' (9 * i + (j - 1)) $! (,x * 10 + j) $! step ins j s)) $ MV.take (lastIdx + 1) states
-      solve' states' insn
+      forConcurrently_ [1 .. 9] $ \j ->
+        MV.iforM_ (MV.take (lastIdx + 1) states) $ \i (s, x) ->
+          MV.write states' (9 * i + (j - 1)) $! (,x * 10 + j) $! foldl' (\s' ins' -> step ins' j s') s (ins : toApply)
+      solve' states' insn'
       where
+        (toApply, insn') =
+          break isInpIns insn
+        isInpIns (IInp _) =
+          True
+        isInpIns _ =
+          False
         merge i (js, jx) = do
           (is, ix) <- MV.read states i
           if is == js
@@ -157,19 +167,8 @@ main =
             else do
               MV.write states (i + 1) (js, jx)
               pure (i + 1)
-    solve' !states (ins : insn) = do
-      if MV.length states < 10000
-        then MV.imapM_ (stepUpd 0) states
-        else do
-          let sliceSize = MV.length states `div` 8
-          runConcurrently $
-            sconcat $
-              Concurrently (MV.imapM_ (stepUpd (7 * sliceSize)) (MV.drop (7 * sliceSize) states))
-                :| fmap (\k -> Concurrently (MV.imapM_ (stepUpd (k * sliceSize)) (MV.take sliceSize $ MV.drop (k * sliceSize) states))) [0 .. 6]
-      solve' states insn
-      where
-        stepUpd offset i (s, x) =
-          MV.write states (offset + i) $! (,x) $! step ins 0 s
+    solve' _ _ =
+      error "shouldn't happen"
     step !ins !inp (!w, !x, !y, !z) =
       case ins of
         IInp (AReg r) ->
@@ -224,3 +223,29 @@ main =
           IEql (reg a1) (regOrVal a2)
         toInsn x =
           error $ "invalid instruction: " <> unwords x
+
+psort :: forall a. (Ord a, MV.Unbox a) => MV.IOVector a -> IO ()
+psort v = do
+  tmpV <- MV.new (MV.length v)
+  MV.copy tmpV v
+  forConcurrently_ slices $ \(start, end) -> sort $ MV.slice start (end - start) tmpV
+  queue <- foldlM (\q (s, _) -> MV.read tmpV s >>= \x -> pure $ S.insert (x, s) q) S.empty slices
+  merge 0 queue tmpV
+  where
+    slices =
+      fmap (\x -> if x == numCapabilities then (sliceSize * (x - 1), MV.length v) else (sliceSize * (x - 1), sliceSize * x)) [1 .. numCapabilities]
+    sliceSize =
+      MV.length v `div` numCapabilities
+    merge :: Int -> S.Set (a, Int) -> MV.IOVector a -> IO ()
+    merge idx queue tmpV
+      | S.null queue =
+        pure ()
+      | otherwise = do
+        MV.write v idx x
+        queue' <-
+          if s + 1 >= MV.length v
+            then pure q'
+            else MV.read tmpV (s + 1) >>= \x' -> if x' >= x then pure (S.insert (x', s + 1) q') else pure q'
+        merge (idx + 1) queue' tmpV
+      where
+        ((x, s), q') = S.deleteFindMin queue
